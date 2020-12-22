@@ -1,19 +1,8 @@
 let http = require("http");
-let fs = require("fs");
 let url = require("url");
 let qs = require("querystring");
 let template = require("./lib/template.js");
-let path = require("path");
-let sanitizeHtml = require("sanitize-html");
-let mysql = require("mysql");
-let db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "1234",
-  database: "test"
-});
-
-db.connect();
+let db = require("./lib/db");
 
 let app = http.createServer(function (request, response) {
   let _url = request.url;
@@ -46,7 +35,6 @@ let app = http.createServer(function (request, response) {
             if (error2) {
               throw error2;
             }
-            console.log(topic);
             let title = topic[0].title;
             let description = topic[0].description;
             let list = template.list(topics);
@@ -185,7 +173,6 @@ let app = http.createServer(function (request, response) {
     request.on("end", function () {
       let post = qs.parse(body);
       let id = post.id;
-      let filteredId = path.parse(id).base;
       db.query(
         "DELETE FROM topic WHERE id=?",
         [post.id],

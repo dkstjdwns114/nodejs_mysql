@@ -168,10 +168,17 @@ let app = http.createServer(function (request, response) {
       let post = qs.parse(body);
       let id = post.id;
       let filteredId = path.parse(id).base;
-      fs.unlink(`data/${filteredId}`, function (error) {
-        response.writeHead(302, { Location: `/` });
-        response.end();
-      });
+      db.query(
+        "DELETE FROM topic WHERE id=?",
+        [post.id],
+        function (error, result) {
+          if (error) {
+            throw error;
+          }
+          response.writeHead(302, { Location: `/` });
+          response.end();
+        }
+      );
     });
   } else {
     response.writeHead(404);

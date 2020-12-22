@@ -68,24 +68,24 @@ let app = http.createServer(function (request, response) {
       });
     }
   } else if (pathname === "/create") {
-    fs.readdir("./data", function (error, filelist) {
-      let title = "WEB - create";
-      let list = template.list(filelist);
+    db.query(`SELECT * FROM topic`, function (error, topics) {
+      let title = "Create";
+      let list = template.list(topics);
       let html = template.HTML(
         title,
         list,
         `
-          <form action="/create_process" method="post">
-            <p><input type="text" name="title" placeholder="title"></p>
-            <p>
-              <textarea name="description" placeholder="description"></textarea>
-            </p>
-            <p>
-              <input type="submit">
-            </p>
-          </form>
+        <form action="/create_process" method="post">
+          <p><input type="text" name="title" placeholder="title"></p>
+          <p>
+            <textarea name="description" placeholder="description"></textarea>
+          </p>
+          <p>
+            <input type="submit">
+          </p>
+        </form>
         `,
-        ""
+        `<a href="/create">create</a>`
       );
       response.writeHead(200);
       response.end(html);
@@ -97,12 +97,17 @@ let app = http.createServer(function (request, response) {
     });
     request.on("end", function () {
       let post = qs.parse(body);
-      let title = post.title;
-      let description = post.description;
-      fs.writeFile(`data/${title}`, description, "utf8", function (err) {
-        response.writeHead(302, { Location: `/?id=${title}` });
-        response.end();
-      });
+      db.query(
+        `INSERT INTO topic (title, description, created, author_id) VALUES(?, ?, NOW(), ?)`,
+        [post.title, post.description, 1],
+        function (error, result) {
+          if (error) {
+            throw error;
+          }
+          response.writeHead(302, { Location: `/?id=${result.insertId}` });
+          response.end();
+        }
+      );
     });
   } else if (pathname === "/update") {
     fs.readdir("./data", function (error, filelist) {

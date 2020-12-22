@@ -21,23 +21,18 @@ let app = http.createServer(function (request, response) {
   let pathname = url.parse(_url, true).pathname;
   if (pathname === "/") {
     if (queryData.id === undefined) {
-      // fs.readdir("./data", function (error, filelist) {
-      //   let title = "Welcome";
-      //   let description = "Hello, Node.js";
-      //   let list = template.list(filelist);
-      //   let html = template.HTML(
-      //     title,
-      //     list,
-      //     `<h2>${title}</h2>${description}`,
-      //     `<a href="/create">create</a>`
-      //   );
-      //   response.writeHead(200);
-      //   response.end(html);
-      // });
       db.query(`SELECT * FROM topic`, function (error, topics) {
-        console.log(topics);
+        let title = "Welcome";
+        let description = "Hello, Node.js";
+        let list = template.list(topics);
+        let html = template.HTML(
+          title,
+          list,
+          `<h2>${title}</h2>${description}`,
+          `<a href="/create">create</a>`
+        );
         response.writeHead(200);
-        response.end("Success");
+        response.end(html);
       });
     } else {
       fs.readdir("./data", function (error, filelist) {

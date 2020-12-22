@@ -1,9 +1,7 @@
 let http = require("http");
 let url = require("url");
-let qs = require("querystring");
-let template = require("./lib/template.js");
-let db = require("./lib/db.js");
 let topic = require("./lib/topic.js");
+let author = require("./lib/author.js");
 
 let app = http.createServer(function (request, response) {
   let _url = request.url;
@@ -25,6 +23,8 @@ let app = http.createServer(function (request, response) {
     topic.update_process(request, response);
   } else if (pathname === "/delete_process") {
     topic.delete_process(request, response);
+  } else if (pathname === "/author") {
+    author.home(request, response);
   } else {
     response.writeHead(404);
     response.end("Not found");

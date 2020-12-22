@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/web-n/Nodejs.git"
+    "url": "git+https://github.com/dkstjdwns114/nodejs_mysql"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/web-n/Nodejs/issues"
+    "url": "https://github.com/dkstjdwns114/nodejs_mysql/issues"
   },
-  "homepage": "https://github.com/web-n/Nodejs#readme",
+  "homepage": "https://github.com/dkstjdwns114/nodejs_mysql#readme",
   "dependencies": {
-    "sanitize-html": "^1.18.2"
+    "sanitize-html": "^1.27.5"
   }
 }

@@ -2,7 +2,8 @@ let http = require("http");
 let url = require("url");
 let qs = require("querystring");
 let template = require("./lib/template.js");
-let db = require("./lib/db");
+let db = require("./lib/db.js");
+let topic = require("./lib/topic.js");
 
 let app = http.createServer(function (request, response) {
   let _url = request.url;
@@ -10,19 +11,7 @@ let app = http.createServer(function (request, response) {
   let pathname = url.parse(_url, true).pathname;
   if (pathname === "/") {
     if (queryData.id === undefined) {
-      db.query(`SELECT * FROM topic`, function (error, topics) {
-        let title = "Welcome";
-        let description = "Hello, Node.js";
-        let list = template.list(topics);
-        let html = template.HTML(
-          title,
-          list,
-          `<h2>${title}</h2>${description}`,
-          `<a href="/create">create</a>`
-        );
-        response.writeHead(200);
-        response.end(html);
-      });
+      topic.home(request, response);
     } else {
       db.query(`SELECT * FROM topic`, function (error, topics) {
         if (error) {
